@@ -9,41 +9,62 @@
       font-family: 'Arial', sans-serif;
       margin: 0;
       padding: 0;
-      background: #004d80; /* Deep blue ocean */
+      background: linear-gradient(135deg, #89f7fe, #66a6ff); /* Ocean gradient */
       display: flex;
       flex-direction: column;
       align-items: center;
       min-height: 100vh;
       color: #fff;
+      position: relative;
+      overflow-x: hidden; /* Prevent horizontal scroll */
     }
 
-    .header {
+    /* Top frame decoration */
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
+      height: 150px; /* Height of the top frame part */
       background: url('https://i.imgur.com/w1oW7a4.png') no-repeat center top;
       background-size: cover;
-      padding-top: 150px; /* Space for the top of the frame */
-      text-align: center;
-      position: relative;
+      z-index: 0;
     }
-    
-    .header::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
+
+    /* Bottom frame decoration */
+    body::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 200px; /* Height of the bottom frame part */
+      background: url('https://i.imgur.com/k2x2x2a.png') no-repeat center bottom;
+      background-size: cover;
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1; /* Ensure content is above background decorations */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 900px; /* Limit overall content width */
+      padding: 20px;
+      box-sizing: border-box;
     }
 
     h1 {
       font-family: 'Georgia', serif;
       font-size: 2.5em;
-      margin-bottom: 20px;
+      margin-top: 50px; /* Adjust margin to sit below the top frame */
+      margin-bottom: 30px;
       color: #fff;
       text-shadow: 0 4px 8px rgba(0,0,0,0.4);
-      position: relative;
-      z-index: 1;
+      text-align: center;
     }
 
     #choices {
@@ -57,9 +78,7 @@
       width: 100%;
       max-width: 400px;
       text-align: center;
-      margin-top: -80px; /* Overlap with the header */
-      position: relative;
-      z-index: 2;
+      margin-bottom: 30px; /* Space before iframe */
     }
 
     button {
@@ -69,59 +88,36 @@
       border: none;
       border-radius: 15px;
       cursor: pointer;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
       text-transform: uppercase;
       letter-spacing: 1px;
+      background: linear-gradient(135deg, #007bff, #0056b3); /* Blue gradient for buttons */
+      color: white;
     }
     
     button:hover {
       transform: translateY(-3px);
       box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-    }
-
-    button:first-child {
-      background: #ff5722; /* Vibrant orange */
-      color: white;
-    }
-    
-    button:first-child:hover {
-      background: #e64a19;
-    }
-
-    button:last-child {
-      background: #009688; /* Teal */
-      color: white;
-    }
-    
-    button:last-child:hover {
-      background: #00796b;
+      background: linear-gradient(135deg, #0056b3, #003d80); /* Darker gradient on hover */
     }
 
     iframe {
       width: 100%;
       height: 60vh;
-      border: 5px solid #fff;
-      margin-top: 30px;
+      border: 5px solid #fff; /* White border for emphasis */
       border-radius: 15px;
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-      background-color: #f0f0f0;
-    }
-
-    .footer-decoration {
-      width: 100%;
-      height: 100px;
-      background: url('https://i.imgur.com/k2x2x2a.png') no-repeat center bottom;
-      background-size: cover;
-      margin-top: -50px;
+      background-color: #f0f0f0; /* Light background for loading */
     }
 
     @media (max-width: 500px) {
       h1 {
         font-size: 1.8em;
+        margin-top: 30px;
       }
       #choices {
         padding: 20px;
-        margin-top: -50px;
+        margin-bottom: 20px;
       }
       button {
         padding: 14px;
@@ -130,27 +126,32 @@
       iframe {
         height: 50vh;
       }
+      body::before {
+        height: 100px;
+      }
+      body::after {
+        height: 150px;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="header">
+  <div class="container">
     <h1>Cruise Experience | BSC Cruise SE</h1>
+
+    <div id="choices">
+      <button onclick="loadVideo()">🎥 Watch Video</button>
+      <button onclick="loadModel()">🚢 View 3D Model</button>
+    </div>
+
+    <div id="viewer"></div>
   </div>
-
-  <div id="choices">
-    <button onclick="loadVideo()">🎥 Watch Video</button>
-    <button onclick="loadModel()">🚢 View 3D Model</button>
-  </div>
-
-  <div id="viewer"></div>
-
-  <div class="footer-decoration"></div>
 
   <script>
     function loadVideo() {
+      // Using a placeholder YouTube embed URL. Replace with your actual video link.
       document.getElementById("viewer").innerHTML =
-        '<iframe src="https://www.youtube.com/embed/Q_Q6-0l50Kk" allowfullscreen></iframe>';
+        '<iframe src="https://www.youtube.com/embed/your_video_id_here" allowfullscreen></iframe>'; 
       document.getElementById("choices").style.display = "none";
       history.pushState({ page: "video" }, "Video", "#video");
     }
