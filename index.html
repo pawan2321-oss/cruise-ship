@@ -1,210 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Explore the Cruise 🚢</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cruise Experience</title>
   <style>
-    :root{
-      --bg:#071428;
-      --panel:#0f2a44;
-      --accent:#f2f6fb;
-      --muted:#c9d6e6;
-      --btn:#1f6aa5;
-    }
-    html,body{height:100%; margin:0; font-family:Inter, system-ui, Arial;}
-    body{
-      background: linear-gradient(180deg, rgba(4,20,35,1) 0%, rgba(7,20,40,1) 100%);
-      color:var(--accent);
-      display:flex;
-      flex-direction:column;
-      align-items:center;
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #f8f9fa;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
-    header{
-      padding:18px 12px 8px;
-      text-align:center;
-    }
-    h1{
-      margin:0;
-      font-size:28px;
-      font-weight:700;
-    }
-    .controls {
-      width:100%;
-      max-width:1100px;
-      margin: 18px 12px;
-      display:flex;
-      gap:12px;
-      justify-content:center;
-      align-items:center;
-      flex-wrap:wrap;
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
     }
 
-    .btn{
-      background:linear-gradient(180deg,var(--btn),#155583);
-      border:none;
-      color:white;
-      padding:10px 16px;
-      border-radius:10px;
-      font-weight:600;
-      cursor:pointer;
-      box-shadow:0 6px 18px rgba(3,10,20,0.45);
-    }
-    .btn.ghost{
-      background:transparent;
-      color:var(--muted);
-      border:1px solid rgba(255,255,255,0.06);
-    }
-    .open-new {
-      color:var(--muted);
-      text-decoration:none;
-      font-size:14px;
+    #choices {
+      background: #fff;
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      width: 100%;
+      max-width: 350px;
+      text-align: center;
     }
 
-    .viewer-wrap{
-      width:100%;
-      max-width:1200px;
-      height: calc(100vh - 170px);
-      background: linear-gradient(180deg, rgba(6,25,40,0.8), rgba(8,28,48,0.95));
-      border-radius:12px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.6);
-      overflow:hidden;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      margin-bottom:24px;
-      padding:12px;
+    button {
+      padding: 14px;
+      font-size: 18px;
+      font-weight: bold;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: 0.3s;
     }
 
-    .placeholder{
-      color:var(--muted);
-      text-align:center;
-      font-size:16px;
-      line-height:1.4;
-      max-width:760px;
-      padding:18px;
+    button:first-child {
+      background: #007bff;
+      color: white;
+    }
+    button:first-child:hover {
+      background: #0056b3;
     }
 
-    iframe.viewer {
-      width:100%;
-      height:100%;
-      border:0;
-      display:block;
-      background:#000;
+    button:last-child {
+      background: #28a745;
+      color: white;
+    }
+    button:last-child:hover {
+      background: #1e7e34;
     }
 
-    footer{
-      color:var(--muted);
-      font-size:13px;
-      margin-bottom:18px;
+    iframe {
+      width: 100%;
+      height: 60vh;
+      border: none;
+      margin-top: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 
-    @media (max-width:720px){
-      h1{font-size:20px;}
-      .viewer-wrap{height: calc(100vh - 210px);}
+    /* Make iframe smaller on very small screens */
+    @media (max-width: 500px) {
+      iframe {
+        height: 50vh;
+      }
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Explore the Cruise 🚢</h1>
-  </header>
-
-  <div class="controls" role="region" aria-label="Choose viewer">
-    <button class="btn" id="videoBtn">Watch Short Video (YouTube)</button>
-    <button class="btn ghost" id="modelBtn">View 3D Model (Sketchfab)</button>
-
-    <!-- open-in-new will update to current viewer -->
-    <a class="open-new" id="openNew" href="#" target="_blank" rel="noopener">Open current viewer in new tab</a>
+  <h1>Cruise Experience</h1>
+  <div id="choices">
+    <button onclick="loadVideo()">🎥 Watch Video</button>
+    <button onclick="loadModel()">🚢 View 3D Model</button>
   </div>
-
-  <main class="viewer-wrap" id="viewerWrap" aria-live="polite">
-    <div class="placeholder" id="placeholder">
-      Choose <strong>Watch Short Video</strong> or <strong>View 3D Model</strong> to load content here.
-      <br><br>
-      Tip: use the "Open current viewer in new tab" link to view full-screen.
-    </div>
-
-    <!-- we will inject an iframe.viewer here when user chooses -->
-  </main>
-
-  <footer>Scan QR → open this page → choose video or 3D model</footer>
+  <div id="viewer"></div>
 
   <script>
-    // YOUR SOURCES (already provided)
-    const youtubeEmbed = "https://www.youtube.com/embed/zOlti0VhqBo?rel=0&autoplay=0";
-    const sketchfabEmbed = "https://sketchfab.com/models/3d6e0524c8114d3095298271b30b57d1/embed";
-
-    const videoBtn = document.getElementById('videoBtn');
-    const modelBtn = document.getElementById('modelBtn');
-    const viewerWrap = document.getElementById('viewerWrap');
-    const placeholder = document.getElementById('placeholder');
-    const openNew = document.getElementById('openNew');
-
-    let current = null; // "video" | "model" | null
-
-    function clearViewer(){
-      // remove existing iframe if any
-      const old = viewerWrap.querySelector('iframe.viewer');
-      if(old) old.remove();
+    function loadVideo() {
+      document.getElementById("viewer").innerHTML =
+        '<iframe src="https://www.youtube.com/embed/zOlti0VhqBo" allowfullscreen></iframe>';
+      document.getElementById("choices").style.display = "none";
     }
-
-    function setOpenLink(url){
-      openNew.href = url;
-      // make it visible / active
-      openNew.style.opacity = '1';
+    function loadModel() {
+      document.getElementById("viewer").innerHTML =
+        '<iframe src="https://sketchfab.com/models/3d6e0524c8114d3095298271b30b57d1/embed" allowfullscreen></iframe>';
+      document.getElementById("choices").style.display = "none";
     }
-
-    function loadVideo(){
-      clearViewer();
-      placeholder.style.display = 'none';
-
-      const iframe = document.createElement('iframe');
-      iframe.className = 'viewer';
-      iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen';
-      iframe.src = youtubeEmbed;
-      iframe.title = "Short cruise ship video";
-      viewerWrap.appendChild(iframe);
-
-      current = 'video';
-      setOpenLink(youtubeEmbed);
-      // update button styles
-      videoBtn.classList.remove('ghost');
-      modelBtn.classList.add('ghost');
-    }
-
-    function loadModel(){
-      clearViewer();
-      placeholder.style.display = 'none';
-
-      const iframe = document.createElement('iframe');
-      iframe.className = 'viewer';
-      iframe.allow = 'fullscreen; vr; xr-spatial-tracking';
-      iframe.src = sketchfabEmbed;
-      iframe.title = "3D model - Sketchfab";
-      viewerWrap.appendChild(iframe);
-
-      current = 'model';
-      setOpenLink(sketchfabEmbed);
-      videoBtn.classList.add('ghost');
-      modelBtn.classList.remove('ghost');
-    }
-
-    // button listeners
-    videoBtn.addEventListener('click', loadVideo);
-    modelBtn.addEventListener('click', loadModel);
-
-    // keyboard support (V = video, M = model)
-    document.addEventListener('keydown', (e) => {
-      if(e.key === 'v' || e.key === 'V') loadVideo();
-      if(e.key === 'm' || e.key === 'M') loadModel();
-    });
-
-    // if someone lands with a hash (#video or #model), auto-load
-    const hash = location.hash.replace('#','');
-    if(hash === 'video') loadVideo();
-    if(hash === 'model') loadModel();
   </script>
 </body>
 </html>
