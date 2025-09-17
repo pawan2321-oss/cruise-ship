@@ -6,72 +6,127 @@
   <title>Cruise Experience</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Arial', sans-serif;
       margin: 0;
-      padding: 20px;
-      background: linear-gradient(135deg, #89f7fe, #66a6ff);
+      padding: 0;
+      background: #004d80; /* Deep blue ocean */
       display: flex;
       flex-direction: column;
       align-items: center;
       min-height: 100vh;
+      color: #fff;
+    }
+
+    .header {
+      width: 100%;
+      background: url('https://i.imgur.com/w1oW7a4.png') no-repeat center top;
+      background-size: cover;
+      padding-top: 150px; /* Space for the top of the frame */
+      text-align: center;
+      position: relative;
+    }
+    
+    .header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
     }
 
     h1 {
-      text-align: center;
+      font-family: 'Georgia', serif;
+      font-size: 2.5em;
       margin-bottom: 20px;
-      color: white;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      color: #fff;
+      text-shadow: 0 4px 8px rgba(0,0,0,0.4);
+      position: relative;
+      z-index: 1;
     }
 
     #choices {
-      background: #fff;
-      padding: 20px;
-      border-radius: 16px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      background: rgba(255, 255, 255, 0.95);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
       display: flex;
       flex-direction: column;
-      gap: 15px;
+      gap: 20px;
       width: 100%;
-      max-width: 350px;
+      max-width: 400px;
       text-align: center;
+      margin-top: -80px; /* Overlap with the header */
+      position: relative;
+      z-index: 2;
     }
 
     button {
-      padding: 14px;
-      font-size: 18px;
+      padding: 18px;
+      font-size: 20px;
       font-weight: bold;
       border: none;
-      border-radius: 12px;
+      border-radius: 15px;
       cursor: pointer;
-      transition: 0.3s;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
     }
 
     button:first-child {
-      background: #007bff;
+      background: #ff5722; /* Vibrant orange */
       color: white;
     }
+    
     button:first-child:hover {
-      background: #0056b3;
+      background: #e64a19;
     }
 
     button:last-child {
-      background: #28a745;
+      background: #009688; /* Teal */
       color: white;
     }
+    
     button:last-child:hover {
-      background: #1e7e34;
+      background: #00796b;
     }
 
     iframe {
       width: 100%;
       height: 60vh;
-      border: none;
-      margin-top: 20px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      border: 5px solid #fff;
+      margin-top: 30px;
+      border-radius: 15px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+      background-color: #f0f0f0;
+    }
+
+    .footer-decoration {
+      width: 100%;
+      height: 100px;
+      background: url('https://i.imgur.com/k2x2x2a.png') no-repeat center bottom;
+      background-size: cover;
+      margin-top: -50px;
     }
 
     @media (max-width: 500px) {
+      h1 {
+        font-size: 1.8em;
+      }
+      #choices {
+        padding: 20px;
+        margin-top: -50px;
+      }
+      button {
+        padding: 14px;
+        font-size: 16px;
+      }
       iframe {
         height: 50vh;
       }
@@ -79,7 +134,9 @@
   </style>
 </head>
 <body>
-  <h1>Cruise Experience</h1>
+  <div class="header">
+    <h1>Cruise Experience | BSC Cruise SE</h1>
+  </div>
 
   <div id="choices">
     <button onclick="loadVideo()">🎥 Watch Video</button>
@@ -88,10 +145,12 @@
 
   <div id="viewer"></div>
 
+  <div class="footer-decoration"></div>
+
   <script>
     function loadVideo() {
       document.getElementById("viewer").innerHTML =
-        '<iframe src="https://www.youtube.com/embed/zOlti0VhqBo" allowfullscreen></iframe>';
+        '<iframe src="https://www.youtube.com/embed/Q_Q6-0l50Kk" allowfullscreen></iframe>';
       document.getElementById("choices").style.display = "none";
       history.pushState({ page: "video" }, "Video", "#video");
     }
