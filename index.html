@@ -1,45 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <title>Cruise Ship 3D</title>
-    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-    <style>
-      body {
-        margin: 0;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        background: linear-gradient(to bottom, #0e1a2b, #102f57);
-        font-family: Arial, sans-serif;
-        color: white;
-        text-align: center;
-      }
-      h1 {
-        margin-bottom: 10px;
-      }
-      model-viewer {
-        width: 90vw;
-        height: 80vh;
-        border-radius: 12px;
-        box-shadow: 0 0 20px rgba(0,0,0,0.5);
-      }
-    </style>
-  </head>
-  <body>
-    <h1>Explore the Cruise 🚢</h1>
-    <model-viewer 
-      src="https://github.com/pawan2321-oss/cruise-ship/releases/download/project/oasis_of_the_seas.glb"
-      alt="Cruise Ship 3D Model"
-      auto-rotate
-      camera-controls
-      shadow-intensity="1"
-      exposure="1"
-      ar
-      ar-modes="webxr quick-look scene-viewer">
-    </model-viewer>
-    <p>Use your mouse or touch to rotate, zoom, and explore.</p>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Explore the Cruise</title>
+  <style>
+    body { margin: 0; }
+    canvas { display: block; }
+  </style>
+</head>
+<body>
+  <h1 style="text-align:center;">Explore the Cruise 🚢</h1>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/loaders/GLTFLoader.js"></script>
+
+  <script>
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({antialias: true});
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    // Add light
+    const light = new THREE.HemisphereLight(0xffffff, 0x444444, 2);
+    light.position.set(0, 20, 0);
+    scene.add(light);
+
+    // Load model
+    const loader = new THREE.GLTFLoader();
+    loader.load('ship.glb', (gltf) => {
+      scene.add(gltf.scene);
+      gltf.scene.position.set(0, -1, 0);
+    }, undefined, (error) => {
+      console.error('Error loading model:', error);
+    });
+
+    camera.position.set(0, 1.5, 5);
+
+    // Animate
+    function animate() {
+      requestAnimationFrame(animate);
+      renderer.render(scene, camera);
+    }
+    animate();
+  </script>
+</body>
 </html>
