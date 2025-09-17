@@ -8,20 +8,38 @@
       body {
         margin: 0;
         display: flex;
+        flex-direction: column;
         justify-content: center;
         align-items: center;
         height: 100vh;
-        background: #0e1a2b;
+        background: linear-gradient(to bottom, #0e1a2b, #102f57);
+        font-family: Arial, sans-serif;
+        color: white;
+        text-align: center;
+      }
+      h1 {
+        margin-bottom: 10px;
       }
       model-viewer {
         width: 90vw;
-        height: 90vh;
+        height: 80vh;
         border-radius: 12px;
         box-shadow: 0 0 20px rgba(0,0,0,0.5);
       }
     </style>
   </head>
   <body>
-    <model-viewer src="oasis.glb" alt="Cruise Ship 3D Model" auto-rotate camera-controls></model-viewer>
+    <h1>Explore the Cruise 🚢</h1>
+    <model-viewer 
+      src="https://github.com/pawan2321-oss/cruise-ship/releases/download/v1.0/oasis.glb"
+      alt="Cruise Ship 3D Model"
+      auto-rotate
+      camera-controls
+      shadow-intensity="1"
+      exposure="1"
+      ar
+      ar-modes="webxr quick-look scene-viewer">
+    </model-viewer>
+    <p>Use your mouse or touch to rotate, zoom, and explore.</p>
   </body>
 </html>
